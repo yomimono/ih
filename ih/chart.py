@@ -21,7 +21,7 @@ DEFAULT = {
     "outputfolder": '.',
 }
 
-OUTPUT_FORMAT = ["html", "term"]
+OUTPUT_FORMAT = ["html", "term", "json"]
 
 # Guideline padding
 GUIDE = 10
@@ -327,6 +327,34 @@ def generate_term_chart(chartimage, pal, render, palette_name, data):
     result += "\n" + data
     return result
 
+def generate_layers(chartimage):
+    layers = {}
+    for y in range(0, chartimage.height):
+        for x in range(0, chartimage.width):
+            rgb = chartimage.getpixel((x, y))
+            try:
+                layers[rgb].append((x, y))
+            except KeyError:
+                layers[rgb] = [(x, y)]
+    return layers
+
+def generate_json_chart(chartimage, pal, render, palette_name, data):
+    stitchy_layers = []
+    # no concept of "substrate" in ih, so it's probably best to render this as a list of layers
+    layers = generate_layers(chartimage)
+    for (rgb, stitches) in layers.items():
+        # they're indexed by hex value, and need to be transformed into the thread type as readable by stitchy
+        thread_names = palette.thread_name(rgb, pal)
+        code = thread_names["code"]
+        thread = {"identifier":code,
+                "name": palette_name + code,
+                "rgb": rgb}
+        stitch = ["Cross", [ "Full" ] ]
+        stitchy_layer = {"thread":thread,
+                "stitch":stitch,
+                "stitches": stitches}
+        stitchy_layers.append(stitchy_layer)
+    return json.dumps(stitchy_layers)
 
 def chart(
     image=None,
@@ -381,6 +409,11 @@ def chart(
         return saved
     elif fileformat == "term":
         chart = generate_term_chart(
+            chartimage, pal=pal, render=render, palette_name=palette_name, data=data
+        )
+        return chart
+    elif fileformat == "json":
+        chart = generate_json_chart(
             chartimage, pal=pal, render=render, palette_name=palette_name, data=data
         )
         return chart

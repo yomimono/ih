@@ -62,7 +62,6 @@ def test_wool():
 def test_term():
     runner(["-o", "term"], output="ih version")
 
-
 def test_term_render():
     runner(["-o", "term", "-r"], output="ih version", print_output=True)
     runner(["-o", "term", "-r", "-s", "25"],
