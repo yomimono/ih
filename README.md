@@ -44,7 +44,7 @@ Options:
                                   Show guidelines, and print without colour
                                   [default: False]
 
-  -o, --fileformat [html|term]    Output file format  [default: html]
+  -o, --fileformat [html|term|json]    Output file format  [default: html]
   -f, --outputfolder TEXT         Output folder
   --version                       Show the version and exit.
   --help                          Show this message and exit.
