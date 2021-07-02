@@ -347,7 +347,7 @@ def generate_json_chart(chartimage, pal, render, palette_name, data):
         thread_names = palette.thread_name(rgb, pal)
         code = thread_names["code"]
         thread = {"identifier":code,
-                "name": palette_name + code,
+                "name": "",
                 "rgb": rgb}
         stitch = ["Cross", [ "Full" ] ]
         stitchy_layer = {"thread":thread,
